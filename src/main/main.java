@@ -15,7 +15,7 @@ import controller.*;
 public class main {
     public static void main(String[] args) throws ClassNotFoundException {
         account account = new account();
-        account.setUser("huuloc123");
+        account.setUser("huuloc3");
         account.setPassword("locpro123");
         account.setFull_name("chung huu loc");
         account.setEmail("huuloc939@gmail.com");
@@ -23,6 +23,6 @@ public class main {
         
         account_controller accountController = new account_controller();
         
-        accountController.newAccount(account);
+        accountController.New(account);
     }
 }

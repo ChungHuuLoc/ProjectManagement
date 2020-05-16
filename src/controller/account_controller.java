@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import model.*;
 import db.db;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -23,33 +25,19 @@ public class account_controller {
     PreparedStatement ps;
     ResultSet rs;
     
-    public boolean checkUserNameExisted(String userName) throws SQLException {
-        ps = con.prepareStatement("SELECT * FROM accounts");
-        rs = ps.executeQuery();
-        while(rs.next()) {
-            if (userName.equals(rs.getString(5))){
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public void newAccount(account account) throws ClassNotFoundException {
+    public void New(account account) throws ClassNotFoundException {
         try{
            Connection conn = db.ConnectSQLServer();
-           ps = conn.prepareStatement("INSERT INTO accounts (username,password,full_name,email,team_name,updated_at) VALUES (?,?,?,?,?,GETDATE())");
+           ps = conn.prepareStatement("INSERT INTO accounts (username,password,full_name,email,team_name) VALUES (?,?,?,?,?)");
            ps.setString(1, account.getUser());
-           ps.setString(2, account.getPassword());
+           ps.setString(2, md5(account.getPassword()));
            ps.setString(3, account.getFull_name());
            ps.setString(4, account.getEmail());
            ps.setString(5, account.getTeam_name());
            ps.executeUpdate();
-           ps = conn.prepareStatement("INSERT INTO user_infos (account_id,full_name,email,updated_at) VALUES (?,?,?,GETDATE())");
-           ps.setInt(1, account.getId());
-           ps.setString(2, account.getFull_name());
-           ps.setString(3, account.getEmail());
-           ps.executeUpdate();
-            
+      
+           newInfo(getAccountId(account.getUser()), account.getFull_name(), account.getEmail());
+           
            JOptionPane.showMessageDialog(null, "Sign up successfully");
            
         }
@@ -57,4 +45,41 @@ public class account_controller {
             JOptionPane.showMessageDialog(null, e);
         }
     }
+    
+    public int getAccountId(String username) throws SQLException, ClassNotFoundException {
+        Connection conn = db.ConnectSQLServer();
+        int id = 0;
+        ps = conn.prepareStatement("SELECT id from accounts WHERE username = ? AND deleted_at is NULL");
+        ps.setString(1, username);
+        rs = ps.executeQuery();
+        while(rs.next()) {
+            id = rs.getInt("id");
+        }
+        return id;
+    }
+    
+    public void newInfo(int id, String fullName, String email) throws ClassNotFoundException, SQLException {
+           Connection conn = db.ConnectSQLServer();
+           ps = conn.prepareStatement("INSERT INTO user_infos (account_id,full_name,email) VALUES (?,?,?)");
+           ps.setInt(1, id);
+           ps.setString(2, fullName);
+           ps.setString(3, email);
+           ps.executeUpdate();
+    }
+    
+    private String md5(String msg) {
+    try {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(msg.getBytes());
+        byte byteData[] = md.digest();
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < byteData.length; i++) {
+            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
+    } catch (NoSuchAlgorithmException e) {
+        return "";
+    }
+}
 }

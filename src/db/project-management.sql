@@ -15,7 +15,7 @@ use ProjectManagement
 create table accounts (
     id              int IDENTITY(1,1) not null,
     created_at      datetime not null default getdate(),
-    updated_at       datetime not null ,
+    updated_at      datetime not null default getdate(),
     deleted_at      datetime,
     username        varchar(50) unique not null,
     password        varchar(50) not null,
@@ -29,7 +29,7 @@ create table accounts (
 create table roles (
     id              int IDENTITY(1,1) not null, 
     created_at      datetime not null default getdate(),
-    updated_at       datetime not null,
+    updated_at      datetime not null default getdate(),
     deleted_at      datetime,
     account_id      int not null foreign key references accounts(id),
     name            varchar(50),
@@ -40,10 +40,10 @@ create table roles (
 create table user_infos (
     id              int IDENTITY(1,1) not null, 
     created_at      datetime not null default getdate(),
-    updated_at       datetime not null,
+    updated_at      datetime not null default getdate(),
     deleted_at      datetime,
     account_id      int not null foreign key references accounts(id),
-    fullname        varchar(100) not null,
+    full_name       text not null,
     gender          int,
     age             int,
     address         text, 
@@ -54,7 +54,7 @@ create table user_infos (
 create table projects (
     id              int IDENTITY(1,1) not null,
     created_at      datetime not null default getdate(),
-    updated_at       datetime not null,
+    updated_at      datetime not null default getdate(),
     deleted_at      datetime,
     name            text not null,
     code            text,
@@ -68,7 +68,7 @@ create table projects (
 create table tasks (
     id              int IDENTITY(1,1) not null,
     created_at      datetime not null default getdate(),
-    updated_at       datetime not null,
+    updated_at      datetime not null default getdate(),
     deleted_at      datetime,    
     account_id      int not null foreign key references accounts(id),
     name            text not null,
@@ -79,8 +79,8 @@ create table tasks (
 
 create table times (
     id                      int IDENTITY(1,1) not null,
-    created_at              datetime not null,
-    updated_at               datetime not null,
+    created_at              datetime not null default getdate(),
+    updated_at              datetime not null default getdate(),
     deleted_at              datetime,  
     project_id              int not null foreign key references projects(id), 
     task_id                 int not null foreign key references tasks(id),
