@@ -103,3 +103,6 @@ create table task_project (
     primary key(task_id, project_id)
 )
 
+select * from accounts;
+
+INSERT INTO accounts (username,password,full_name,email,team_name,updated_at) VALUES ('lochuu','123123','chung huu loc','hulloc93@gmail.com','backend',GETDATE())
