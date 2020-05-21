@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import model.*;
 import db.db;
+import helper.helper;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -28,15 +29,14 @@ public class account_controller {
     public void New(account account) throws ClassNotFoundException {
         try{
            Connection conn = db.ConnectSQLServer();
-           ps = conn.prepareStatement("INSERT INTO accounts (username,password,full_name,email,team_name) VALUES (?,?,?,?,?)");
-           ps.setString(1, account.getUser());
+           ps = conn.prepareStatement("INSERT INTO accounts (password,full_name,email,team_name) VALUES (?,?,?,?)");
            ps.setString(2, md5(account.getPassword()));
            ps.setString(3, account.getFull_name());
            ps.setString(4, account.getEmail());
            ps.setString(5, account.getTeam_name());
            ps.executeUpdate();
       
-           newInfo(getAccountId(account.getUser()), account.getFull_name(), account.getEmail());
+           newInfo(getAccountId(account.getEmail()), account.getFull_name(), account.getEmail());
            
            JOptionPane.showMessageDialog(null, "Sign up successfully");
            
@@ -46,11 +46,11 @@ public class account_controller {
         }
     }
     
-    public int getAccountId(String username) throws SQLException, ClassNotFoundException {
+    public int getAccountId(String email) throws SQLException, ClassNotFoundException {
         Connection conn = db.ConnectSQLServer();
         int id = 0;
-        ps = conn.prepareStatement("SELECT id from accounts WHERE username = ? AND deleted_at is NULL");
-        ps.setString(1, username);
+        ps = conn.prepareStatement("SELECT id FROM accounts WHERE email = ? AND deleted_at is NULL");
+        ps.setString(1, email);
         rs = ps.executeQuery();
         while(rs.next()) {
             id = rs.getInt("id");
@@ -66,6 +66,94 @@ public class account_controller {
            ps.setString(3, email);
            ps.executeUpdate();
     }
+    
+    public void signin(String email, String password) throws ClassNotFoundException {
+        try{
+            Connection conn = db.ConnectSQLServer();
+            ps = conn.prepareStatement("SELECT * FROM accounts WHERE email = ? AND deleted_at is NULL");
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                if (md5(password).compareTo(rs.getString("password")) == 0) {
+                   JOptionPane.showMessageDialog(null, "Sign in successfully");
+                   return;
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Email or password is incorrect");
+        }
+        catch(SQLException e) {
+            JOptionPane.showMessageDialog(null, "Email or password is incorrect");
+        }
+    }
+    
+    public void Verify(String code, String email) throws ClassNotFoundException {
+        try {
+            Connection conn = db.ConnectSQLServer();
+            ps = conn.prepareStatement("SELECT * FROM user_infos WHERE email = ? AND deleted_at is NULL");
+            ps.setString(1, email);  
+            rs = ps.executeQuery();
+            while(rs.next()){
+                if (rs.getString("code").equals(code)) {
+                    JOptionPane.showMessageDialog(null, "Verify successfully");
+                }
+            }
+            
+            JOptionPane.showMessageDialog(null, "Invalid code");
+        }
+        catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Invalid code");
+        } 
+    }
+    
+    public void updatePassword(String email, String password) throws ClassNotFoundException {
+        try {
+            Connection conn = db.ConnectSQLServer();
+            ps = conn.prepareStatement("UPDATE accounts SET password = ? WHERE email = ? AND deleted_at is NULL");
+            ps.setString(1, password); 
+            ps.setString(2, email);
+            ps.executeUpdate();            
+            
+            JOptionPane.showMessageDialog(null, "Password has changed");
+        }
+        catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Some thing went wrong!");
+        }         
+    }
+    
+    public void sendCodeResetPass(String email) throws ClassNotFoundException, Exception {
+        try{
+            
+            String randCode = generateRandomCode(email);
+            String body = "<h1>Your reset password code is: "+ randCode +"+<h1>";
+            
+            Connection conn = db.ConnectSQLServer();
+            ps = conn.prepareStatement("SELECT * FROM user_infos WHERE email = ? AND deleted_at is NULL");
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                helper.send_Email(helper.getSmtpServer(), rs.getString("email"), helper.getSendFrom(), helper.getPass(), helper.getSubject(), body);
+            }
+            JOptionPane.showMessageDialog(null, "Code has sent");
+        }
+        catch(SQLException e) {
+            String body = "<h1>Can not find any account of this email <h1>";
+            
+            helper.send_Email(helper.getSmtpServer(), rs.getString("email"), helper.getSendFrom(), helper.getPass(), helper.getSubject(), body);
+        }
+    }
+    
+    public String generateRandomCode(String email) throws ClassNotFoundException, SQLException {
+        String code = md5(email);
+        Connection conn = db.ConnectSQLServer();
+        ps = conn.prepareStatement("UPDATE user_infos SET code = ? WHERE email = ? AND deleted_at is NULL");
+        ps.setString(1, code); 
+        ps.setString(2, email);
+        ps.executeUpdate();
+        
+        return code;
+    }
+    
+    
     
     private String md5(String msg) {
     try {

@@ -16,7 +16,6 @@ public class account {
     private java.sql.Date created_at;
     private java.sql.Date updated_at;
     private java.sql.Date deleted_at;
-    private String user;
     private String password;
     private String full_name;
     private String email;
@@ -52,14 +51,6 @@ public class account {
 
     public void setDeleted_at(Date deleted_at) {
         this.deleted_at = deleted_at;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
     }
 
     public String getPassword() {

@@ -25,24 +25,13 @@ create table accounts (
     created_at      datetime not null default getdate(),
     updated_at      datetime not null default getdate(),
     deleted_at      datetime,
-    username        varchar(50) unique not null,
     password        varchar(50) not null,
     full_name       text not null,    
-    email           varchar(100) not null,
+    email           varchar(100) unique not null,
     team_name       text not null,
     primary key(id)
 )
 
-
-create table roles (
-    id              int IDENTITY(1,1) not null, 
-    created_at      datetime not null default getdate(),
-    updated_at      datetime not null default getdate(),
-    deleted_at      datetime,
-    account_id      int not null foreign key references accounts(id),
-    name            varchar(50),
-    primary key(id)
-)
 
 
 create table user_infos (
@@ -56,6 +45,7 @@ create table user_infos (
     age             int,
     address         text, 
     email           varchar(100) not null,
+	code            text,
     primary key(id)
 )
 
@@ -70,6 +60,17 @@ create table projects (
     end_date        datetime not null,
     fee             decimal(19,2),
     hours           decimal(19,2),
+    primary key(id)
+)
+
+create table roles (
+    id              int IDENTITY(1,1) not null, 
+    created_at      datetime not null default getdate(),
+    updated_at      datetime not null default getdate(),
+    deleted_at      datetime,
+    account_id      int not null foreign key references accounts(id),
+    project_id      int not null foreign key references projects(id),
+    name            varchar(50),
     primary key(id)
 )
 
@@ -113,6 +114,8 @@ create table task_project (
 
 
 
+
 select * from accounts;
 select * from user_infos;
 
+INSERT INTO user_infos (account_id,full_name,email) VALUES (1,'huuloc939@gmail.com')
