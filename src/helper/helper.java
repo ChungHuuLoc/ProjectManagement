@@ -7,6 +7,8 @@ package helper;
 
 import java.util.Date;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
@@ -81,6 +83,14 @@ public class helper {
     Transport.send(msg);
     System.out.println("Mail has sent");
 
+    }
+    
+    public static boolean valEmail(String email){
+        String emailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+        Pattern emailPat = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = emailPat.matcher(email);
+        
+        return matcher.find();
     }
 
     
