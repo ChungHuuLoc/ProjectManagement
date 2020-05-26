@@ -33,6 +33,6 @@ public class main {
           
           String body = "<h1>Your reset password code is: <h1>";
           
-          helper.send_Email(helper.getSmtpServer(), "huuloc939@gmail.com", helper.getSendFrom(), helper.getPass(), helper.getSubject(), body);
+          helper.send_Email(helper.getSmtpServer(), "cuquay67@gmail.com", helper.getSendFrom(), helper.getPass(), helper.getSubject(), body);
     }
 }

@@ -132,13 +132,16 @@ public class account_controller {
             rs = ps.executeQuery();
             while(rs.next()) {
                 helper.send_Email(helper.getSmtpServer(), rs.getString("email"), helper.getSendFrom(), helper.getPass(), helper.getSubject(), body);
+                JOptionPane.showMessageDialog(null, "Mail has sent");
+                return;
             }
-            JOptionPane.showMessageDialog(null, "Code has sent");
+            
+            String body1 = "<h1>Can not find any account of this email <h1>";
+            helper.send_Email(helper.getSmtpServer(), email, helper.getSendFrom(), helper.getPass(), helper.getSubject(), body1);
+            JOptionPane.showMessageDialog(null, "Mail has sent");
         }
         catch(SQLException e) {
-            String body = "<h1>Can not find any account of this email <h1>";
-            
-            helper.send_Email(helper.getSmtpServer(), rs.getString("email"), helper.getSendFrom(), helper.getPass(), helper.getSubject(), body);
+            JOptionPane.showMessageDialog(null, "Error");
         }
     }
     
