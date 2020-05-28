@@ -30,10 +30,10 @@ public class account_controller {
         try{
            Connection conn = db.ConnectSQLServer();
            ps = conn.prepareStatement("INSERT INTO accounts (password,full_name,email,team_name) VALUES (?,?,?,?)");
-           ps.setString(2, md5(account.getPassword()));
-           ps.setString(3, account.getFull_name());
-           ps.setString(4, account.getEmail());
-           ps.setString(5, account.getTeam_name());
+           ps.setString(1, md5(account.getPassword()));
+           ps.setString(2, account.getFull_name());
+           ps.setString(3, account.getEmail());
+           ps.setString(4, account.getTeam_name());
            ps.executeUpdate();
       
            newInfo(getAccountId(account.getEmail()), account.getFull_name(), account.getEmail());
