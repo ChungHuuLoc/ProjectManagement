@@ -8,6 +8,8 @@ package main;
 import model.*;
 import controller.*;
 import helper.*;
+import redis.clients.jedis.Jedis;
+import redis.redis;
 
 /**
  *
@@ -15,24 +17,32 @@ import helper.*;
  */
 public class main {
     public static void main(String[] args) throws ClassNotFoundException, Exception {
-//        account account = new account();
-//        account.setUser("huuloc3");
-//        account.setPassword("locpro123");
-//        account.setFull_name("chung huu loc");
-//        account.setEmail("huuloc939@gmail.com");
-//        account.setTeam_name("backend");
-//        
-//        account_controller accountController = new account_controller();
+        account account = new account();
+        account.setPassword("locpro123");
+        account.setFull_name("chung huu loc");
+        account.setEmail("huuloc939@gmail.com");
+        account.setTeam_name("backend");
+        
+      
 //        
 //        accountController.New(account);
 
 //          account_controller accountController = new account_controller();
 //          accountController.signin("huuloc1", "locpro1233");
 
-          helper helper = new helper();
+//          helper helper = new helper();
+//          
+//          String body = "<h1>Your reset password code is: <h1>";
+//          
+//          helper.send_Email(helper.getSmtpServer(), "cuquay67@gmail.com", helper.getSendFrom(), helper.getPass(), helper.getSubject(), body);
+
+          Jedis session = redis.Session();
           
-          String body = "<h1>Your reset password code is: <h1>";
+          String acc = "huuloc939@gmail.com";
           
-          helper.send_Email(helper.getSmtpServer(), "cuquay67@gmail.com", helper.getSendFrom(), helper.getPass(), helper.getSubject(), body);
+          session.set("userId", acc);
+          
+          
+          System.out.println("redis successfully: ============>  " + session.get("userId"));
     }
 }

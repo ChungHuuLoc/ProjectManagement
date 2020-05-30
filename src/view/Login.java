@@ -1,19 +1,15 @@
 package view;
-import db.db;
-import java.sql.Connection;
+
+import db.*;
+import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import javax.swing.JOptionPane;
-import controller.*;
-import java.awt.Color;
-import java.util.logging.Logger;
-import model.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.management.StringValueExp;
 import javax.swing.JFrame;
-
+import javax.swing.table.DefaultTableModel;
+import java.sql.Connection;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -47,11 +43,11 @@ public class Login extends javax.swing.JFrame {
         jToggleButton1 = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField_Mail = new javax.swing.JTextField();
+        jTextField_Username = new javax.swing.JTextField();
         jPasswordField = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
         jButton1_Login = new javax.swing.JButton();
-        jLabel_Signup = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jLabel_exit = new javax.swing.JLabel();
         jLabel_minimize = new javax.swing.JLabel();
 
@@ -61,25 +57,25 @@ public class Login extends javax.swing.JFrame {
         setUndecorated(true);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setText("Email");
+        jLabel1.setText("Username:");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("Password:");
 
-        jTextField_Mail.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextField_Mail.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField_Mail.setText("email");
-        jTextField_Mail.addFocusListener(new java.awt.event.FocusAdapter() {
+        jTextField_Username.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jTextField_Username.setForeground(new java.awt.Color(153, 153, 153));
+        jTextField_Username.setText("username");
+        jTextField_Username.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextField_MailFocusGained(evt);
+                jTextField_UsernameFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextField_MailFocusLost(evt);
+                jTextField_UsernameFocusLost(evt);
             }
         });
-        jTextField_Mail.addActionListener(new java.awt.event.ActionListener() {
+        jTextField_Username.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_MailActionPerformed(evt);
+                jTextField_UsernameActionPerformed(evt);
             }
         });
 
@@ -118,16 +114,13 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jLabel_Signup.setText("Create new account");
-        jLabel_Signup.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel_SignupMouseClicked(evt);
-            }
+        jLabel4.setText("Sign up");
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jLabel_SignupMouseEntered(evt);
+                jLabel4MouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jLabel_SignupMouseExited(evt);
+                jLabel4MouseExited(evt);
             }
         });
 
@@ -168,14 +161,13 @@ public class Login extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField_Mail)
+                                .addComponent(jTextField_Username)
                                 .addComponent(jPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabel4)))
                         .addGap(0, 55, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(137, 137, 137)
-                .addComponent(jLabel_Signup)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,14 +185,14 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField_Mail, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextField_Username, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jButton1_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel_Signup)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel4)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         pack();
@@ -211,53 +203,57 @@ public class Login extends javax.swing.JFrame {
          PreparedStatement st;
          ResultSet rs;
          //get Username and password
-         String mail = jTextField_Mail.getText();
+         String username = jTextField_Username.getText();
          String password = String.valueOf(jPasswordField.getPassword());
-         model.account account = new model.account();
-           account.setEmail(mail);
-           account.setPassword(password);
-            account_controller signin = new account_controller();
-        try {
-            signin.signin(mail,password);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+         try {
+             Connection connection = db.ConnectSQLServer();
+             String query = "SELECT * FROM accounts WHERE username=? and password=?";
+             st = connection.prepareStatement(query);
+             st.setString(1, username);
+             st.setString(2, password);
+             rs = st.executeQuery();
+             if(rs.next())
+             {
+                  //show a new form
+                 JOptionPane.showMessageDialog(null, "Login Successfull");
+             }  else{
+                 //error message
+                 JOptionPane.showMessageDialog(null, "Username or Password incorrect");
+             }
+            
+            
+        } catch (ClassNotFoundException | SQLException e) {
         }
-        InforForm form = new InforForm();
-        form.setVisible(true);
-        form.setLocationRelativeTo(null);
-        this.dispose();
-         
-         
     }//GEN-LAST:event_jButton1_LoginActionPerformed
 
-    private void jTextField_MailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_MailActionPerformed
+    private void jTextField_UsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_UsernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField_MailActionPerformed
+    }//GEN-LAST:event_jTextField_UsernameActionPerformed
 
     private void jPasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordFieldActionPerformed
 
-    private void jTextField_MailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField_MailFocusLost
+    private void jTextField_UsernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField_UsernameFocusLost
         // TODO add your handling code here:
-        if(jTextField_Mail.getText().trim().toLowerCase().equals("email")||
-                jTextField_Mail.getText().trim().equals(""))
+        if(jTextField_Username.getText().trim().toLowerCase().equals("username")||
+                jTextField_Username.getText().trim().equals(""))
         {
-            jTextField_Mail.setText("email");
-            jTextField_Mail.setForeground(new Color(153,153,153));
+            jTextField_Username.setText("username");
+            jTextField_Username.setForeground(new Color(153,153,153));
         }
-    }//GEN-LAST:event_jTextField_MailFocusLost
+    }//GEN-LAST:event_jTextField_UsernameFocusLost
 
-    private void jTextField_MailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField_MailFocusGained
+    private void jTextField_UsernameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField_UsernameFocusGained
         // TODO add your handling code here:
         //Xoa chu username
-        if(jTextField_Mail.getText().trim().toLowerCase().equals("email"))
+        if(jTextField_Username.getText().trim().toLowerCase().equals("username"))
         {
-            jTextField_Mail.setText("");
-            jTextField_Mail.setForeground(Color.black);
+            jTextField_Username.setText("");
+            jTextField_Username.setForeground(Color.black);
         }
             
-    }//GEN-LAST:event_jTextField_MailFocusGained
+    }//GEN-LAST:event_jTextField_UsernameFocusGained
 
     private void jPasswordFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPasswordFieldFocusGained
         // TODO add your handling code here:
@@ -298,24 +294,13 @@ public class Login extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jLabel_exitMouseClicked
 
-    private void jLabel_SignupMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_SignupMouseEntered
+    private void jLabel4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseEntered
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jLabel_SignupMouseEntered
+    }//GEN-LAST:event_jLabel4MouseEntered
 
-    private void jLabel_SignupMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_SignupMouseExited
+    private void jLabel4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseExited
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jLabel_SignupMouseExited
-
-    private void jLabel_SignupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_SignupMouseClicked
-        // TODO add your handling code here:
-        RegisterForm form = new RegisterForm();
-        form.setVisible(true);
-        form.setLocationRelativeTo(null);
-        this.dispose();
-        
-    }//GEN-LAST:event_jLabel_SignupMouseClicked
+    }//GEN-LAST:event_jLabel4MouseExited
 
     /**
      * @param args the command line arguments
@@ -357,11 +342,11 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel_Signup;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel_exit;
     private javax.swing.JLabel jLabel_minimize;
     private javax.swing.JPasswordField jPasswordField;
-    private javax.swing.JTextField jTextField_Mail;
+    private javax.swing.JTextField jTextField_Username;
     private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 }

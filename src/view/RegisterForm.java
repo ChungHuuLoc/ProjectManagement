@@ -29,7 +29,6 @@ public class RegisterForm extends javax.swing.JFrame {
      */
     public RegisterForm() {
         initComponents();
-        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -59,7 +58,6 @@ public class RegisterForm extends javax.swing.JFrame {
         jPasswordField2_ConfirmPass = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
         jTextField_teamname = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
 
         jTextField2.setText("jTextField2");
 
@@ -100,13 +98,6 @@ public class RegisterForm extends javax.swing.JFrame {
 
         jLabel3.setText("Team name");
 
-        jLabel8.setText("Already has account? Login here");
-        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel8MouseClicked(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,6 +115,9 @@ public class RegisterForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(195, 195, 195)
+                        .addComponent(jButton_Register, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel6))
@@ -145,13 +139,7 @@ public class RegisterForm extends javax.swing.JFrame {
                                 .addGap(40, 40, 40)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jPasswordField2_ConfirmPass, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                                    .addComponent(jTextField_teamname)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(197, 197, 197)
-                        .addComponent(jButton_Register, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(180, 180, 180)
-                        .addComponent(jLabel8)))
+                                    .addComponent(jTextField_teamname))))))
                 .addContainerGap(146, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -187,11 +175,9 @@ public class RegisterForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jTextField_teamname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                .addGap(58, 58, 58)
                 .addComponent(jButton_Register, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel8)
-                .addGap(35, 35, 35))
+                .addGap(43, 43, 43))
         );
 
         pack();
@@ -239,14 +225,6 @@ public class RegisterForm extends javax.swing.JFrame {
               
         
     }//GEN-LAST:event_jButton_RegisterActionPerformed
-
-    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
-        // TODO add your handling code here:
-        Login form = new Login();
-        form.setVisible(true);
-        form.setLocationRelativeTo(null);
-        this.dispose();
-    }//GEN-LAST:event_jLabel8MouseClicked
 
     //Create function to verify the empty field
     public boolean verifyField(){
@@ -347,7 +325,6 @@ public class RegisterForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField2_ConfirmPass;
     private javax.swing.JTextField jTextField2;

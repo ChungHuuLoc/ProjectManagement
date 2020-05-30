@@ -15,6 +15,8 @@ import db.db;
 import helper.helper;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import redis.clients.jedis.Jedis;
+import redis.redis;
 
 /**
  *
@@ -30,10 +32,10 @@ public class account_controller {
         try{
            Connection conn = db.ConnectSQLServer();
            ps = conn.prepareStatement("INSERT INTO accounts (password,full_name,email,team_name) VALUES (?,?,?,?)");
-           ps.setString(1, md5(account.getPassword()));
-           ps.setString(2, account.getFull_name());
-           ps.setString(3, account.getEmail());
-           ps.setString(4, account.getTeam_name());
+           ps.setString(2, md5(account.getPassword()));
+           ps.setString(3, account.getFull_name());
+           ps.setString(4, account.getEmail());
+           ps.setString(5, account.getTeam_name());
            ps.executeUpdate();
       
            newInfo(getAccountId(account.getEmail()), account.getFull_name(), account.getEmail());
@@ -75,10 +77,14 @@ public class account_controller {
             rs = ps.executeQuery();
             while(rs.next()) {
                 if (md5(password).compareTo(rs.getString("password")) == 0) {
-                   JOptionPane.showMessageDialog(null, "Sign in successfully");
+                    Jedis session = redis.Session();
+                    session.set("email", rs.getString("email"));
+                 
+                    JOptionPane.showMessageDialog(null, "Sign in successfully");
                    return;
                 }
             }
+            
             JOptionPane.showMessageDialog(null, "Email or password is incorrect");
         }
         catch(SQLException e) {
