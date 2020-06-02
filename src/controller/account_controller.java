@@ -32,11 +32,14 @@ public class account_controller {
         try{
            Connection conn = db.ConnectSQLServer();
            ps = conn.prepareStatement("INSERT INTO accounts (password,full_name,email,team_name) VALUES (?,?,?,?)");
-           ps.setString(2, md5(account.getPassword()));
-           ps.setString(3, account.getFull_name());
-           ps.setString(4, account.getEmail());
-           ps.setString(5, account.getTeam_name());
+           ps.setString(1, md5(account.getPassword()));
+           ps.setString(2, account.getFull_name());
+           ps.setString(3, account.getEmail());
+           ps.setString(4, account.getTeam_name());
            ps.executeUpdate();
+           
+           conn.close();
+           ps.close();
       
            newInfo(getAccountId(account.getEmail()), account.getFull_name(), account.getEmail());
            
@@ -57,6 +60,10 @@ public class account_controller {
         while(rs.next()) {
             id = rs.getInt("id");
         }
+        
+        rs.close();
+        conn.close();
+        ps.close();
         return id;
     }
     
@@ -67,6 +74,8 @@ public class account_controller {
            ps.setString(2, fullName);
            ps.setString(3, email);
            ps.executeUpdate();
+           conn.close();
+           ps.close();           
     }
     
     public void signin(String email, String password) throws ClassNotFoundException {
@@ -84,6 +93,10 @@ public class account_controller {
                    return;
                 }
             }
+            
+            rs.close();
+            conn.close();
+            ps.close();
             
             JOptionPane.showMessageDialog(null, "Email or password is incorrect");
         }
@@ -104,6 +117,10 @@ public class account_controller {
                 }
             }
             
+            rs.close();
+            conn.close();
+            ps.close();
+            
             JOptionPane.showMessageDialog(null, "Invalid code");
         }
         catch (SQLException e) {
@@ -118,7 +135,9 @@ public class account_controller {
             ps.setString(1, password); 
             ps.setString(2, email);
             ps.executeUpdate();            
-            
+            conn.close();
+            ps.close();
+           
             JOptionPane.showMessageDialog(null, "Password has changed");
         }
         catch (SQLException e) {
@@ -142,6 +161,10 @@ public class account_controller {
                 return;
             }
             
+            rs.close();
+            conn.close();
+            ps.close();
+            
             String body1 = "<h1>Can not find any account of this email <h1>";
             helper.send_Email(helper.getSmtpServer(), email, helper.getSendFrom(), helper.getPass(), helper.getSubject(), body1);
             JOptionPane.showMessageDialog(null, "Mail has sent");
@@ -158,6 +181,8 @@ public class account_controller {
         ps.setString(1, code); 
         ps.setString(2, email);
         ps.executeUpdate();
+        conn.close();
+        ps.close();        
         
         return code;
     }

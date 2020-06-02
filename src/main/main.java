@@ -24,10 +24,10 @@ public class main {
         account.setTeam_name("backend");
         
       
-//        
-//        accountController.New(account);
+        account_controller accountController = new account_controller();
+        accountController.New(account);
 
-//          account_controller accountController = new account_controller();
+
 //          accountController.signin("huuloc1", "locpro1233");
 
 //          helper helper = new helper();
@@ -36,13 +36,26 @@ public class main {
 //          
 //          helper.send_Email(helper.getSmtpServer(), "cuquay67@gmail.com", helper.getSendFrom(), helper.getPass(), helper.getSubject(), body);
 
-          Jedis session = redis.Session();
-          
-          String acc = "huuloc939@gmail.com";
-          
-          session.set("userId", acc);
-          
-          
-          System.out.println("redis successfully: ============>  " + session.get("userId"));
+//          Jedis session = redis.Session();
+//          
+//          String acc = "huuloc939@gmail.com";
+//          
+//          session.set("userId", acc);
+//          
+//          
+//          System.out.println("redis successfully: ============>  " + session.get("userId"));
+         project project = new project();
+        
+         project.setName("abc");
+         project.setCode("ABC");
+         project.setStart_date(java.sql.Date.valueOf("2020-05-01"));
+         project.setEnd_date(java.sql.Date.valueOf("2020-05-31"));
+         project.setFee(1000);
+         project.setHours(1600);
+         
+         project_controller projectController = new project_controller();
+         
+         projectController.New(project, 1);
+
     }
 }

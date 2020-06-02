@@ -37,6 +37,9 @@ public class info_controller {
             userInfo.setAddress(rs.getString("address"));
             userInfo.setAge(rs.getInt("age"));
         }
+        conn.close();
+        rs.close();
+        ps.close();
         return userInfo;
     }
     
@@ -49,6 +52,8 @@ public class info_controller {
         ps.setString(1, userInfo.getAddress());
         ps.setInt(1, userInfo.getId());
         ps.executeUpdate(); 
+        conn.close();
+        ps.close();
         
         return show(userInfo.getEmail());
     }

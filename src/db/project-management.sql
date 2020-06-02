@@ -1,17 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- * Author:  huulo
- * Created: May 12, 2020
- */
-
-create database ProjectManagement
-
-use ProjectManagement
-
 create table accounts (
     id              int IDENTITY(1,1) not null,
     created_at      datetime not null default getdate(),
@@ -44,7 +30,7 @@ create table projects (
     created_at      datetime not null default getdate(),
     updated_at      datetime not null default getdate(),
     deleted_at      datetime,
-    name            text not null,
+    name            varchar(100) unique not null,
     code            text,
     start_date      datetime not null,
     end_date        datetime not null,
