@@ -10,6 +10,10 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import controller.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -43,7 +47,7 @@ public class Login extends javax.swing.JFrame {
         jToggleButton1 = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField_Username = new javax.swing.JTextField();
+        jTextField_Mail = new javax.swing.JTextField();
         jPasswordField = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
         jButton1_Login = new javax.swing.JButton();
@@ -57,25 +61,25 @@ public class Login extends javax.swing.JFrame {
         setUndecorated(true);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setText("Username:");
+        jLabel1.setText("Email:");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("Password:");
 
-        jTextField_Username.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextField_Username.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField_Username.setText("username");
-        jTextField_Username.addFocusListener(new java.awt.event.FocusAdapter() {
+        jTextField_Mail.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jTextField_Mail.setForeground(new java.awt.Color(153, 153, 153));
+        jTextField_Mail.setText("Email");
+        jTextField_Mail.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextField_UsernameFocusGained(evt);
+                jTextField_MailFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextField_UsernameFocusLost(evt);
+                jTextField_MailFocusLost(evt);
             }
         });
-        jTextField_Username.addActionListener(new java.awt.event.ActionListener() {
+        jTextField_Mail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField_UsernameActionPerformed(evt);
+                jTextField_MailActionPerformed(evt);
             }
         });
 
@@ -161,7 +165,7 @@ public class Login extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField_Username)
+                                .addComponent(jTextField_Mail)
                                 .addComponent(jPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
@@ -185,7 +189,7 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField_Username, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextField_Mail, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
@@ -200,60 +204,54 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton1_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1_LoginActionPerformed
         // TODO add your handling code here:
-         PreparedStatement st;
+          PreparedStatement st;
          ResultSet rs;
          //get Username and password
-         String username = jTextField_Username.getText();
+         String mail = jTextField_Mail.getText();
          String password = String.valueOf(jPasswordField.getPassword());
-         try {
-             Connection connection = db.ConnectSQLServer();
-             String query = "SELECT * FROM accounts WHERE username=? and password=?";
-             st = connection.prepareStatement(query);
-             st.setString(1, username);
-             st.setString(2, password);
-             rs = st.executeQuery();
-             if(rs.next())
-             {
-                  //show a new form
-                 JOptionPane.showMessageDialog(null, "Login Successfull");
-             }  else{
-                 //error message
-                 JOptionPane.showMessageDialog(null, "Username or Password incorrect");
-             }
-            
-            
-        } catch (ClassNotFoundException | SQLException e) {
+         model.account account = new model.account();
+           account.setEmail(mail);
+           account.setPassword(password);
+            account_controller signin = new account_controller();
+        try {
+            signin.signin(mail,password);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
+        InforForm form = new InforForm();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
     }//GEN-LAST:event_jButton1_LoginActionPerformed
 
-    private void jTextField_UsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_UsernameActionPerformed
+    private void jTextField_MailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_MailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField_UsernameActionPerformed
+    }//GEN-LAST:event_jTextField_MailActionPerformed
 
     private void jPasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordFieldActionPerformed
 
-    private void jTextField_UsernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField_UsernameFocusLost
+    private void jTextField_MailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField_MailFocusLost
         // TODO add your handling code here:
-        if(jTextField_Username.getText().trim().toLowerCase().equals("username")||
-                jTextField_Username.getText().trim().equals(""))
+        if(jTextField_Mail.getText().trim().toLowerCase().equals("email")||
+                jTextField_Mail.getText().trim().equals(""))
         {
-            jTextField_Username.setText("username");
-            jTextField_Username.setForeground(new Color(153,153,153));
+            jTextField_Mail.setText("email");
+            jTextField_Mail.setForeground(new Color(153,153,153));
         }
-    }//GEN-LAST:event_jTextField_UsernameFocusLost
+    }//GEN-LAST:event_jTextField_MailFocusLost
 
-    private void jTextField_UsernameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField_UsernameFocusGained
+    private void jTextField_MailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField_MailFocusGained
         // TODO add your handling code here:
         //Xoa chu username
-        if(jTextField_Username.getText().trim().toLowerCase().equals("username"))
+        if(jTextField_Mail.getText().trim().toLowerCase().equals("email"))
         {
-            jTextField_Username.setText("");
-            jTextField_Username.setForeground(Color.black);
+            jTextField_Mail.setText("");
+            jTextField_Mail.setForeground(Color.black);
         }
             
-    }//GEN-LAST:event_jTextField_UsernameFocusGained
+    }//GEN-LAST:event_jTextField_MailFocusGained
 
     private void jPasswordFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPasswordFieldFocusGained
         // TODO add your handling code here:
@@ -346,7 +344,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel_exit;
     private javax.swing.JLabel jLabel_minimize;
     private javax.swing.JPasswordField jPasswordField;
-    private javax.swing.JTextField jTextField_Username;
+    private javax.swing.JTextField jTextField_Mail;
     private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 }
