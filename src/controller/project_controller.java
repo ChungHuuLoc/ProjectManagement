@@ -5,6 +5,7 @@
  */
 package controller;
 
+import static controller.project_account_controller.projectAccount;
 import db.db;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,38 +42,35 @@ public class project_controller {
         conn.close();
         ps.close();
 
-        projectAccount(getProjectJustCreated(project.getName()), accountId);
-        role_controller.newRole(getProjectJustCreated(project.getName()), accountId);
+        projectAccount(getProjectJustCreated(project.getName()).getId(), accountId);
+        role_controller.newRole(getProjectJustCreated(project.getName()).getId(), accountId);
 
 
 
         JOptionPane.showMessageDialog(null, "Create new project successfully");
     }
     
-    public void projectAccount(int projectId, int accountId) throws ClassNotFoundException, SQLException{
-        Connection conn = db.ConnectSQLServer();
-        ps = conn.prepareStatement("INSERT INTO account_project (account_id, project_id) VALUES (?,?)");
-        ps.setInt(1, accountId);
-        ps.setInt(2, projectId);
-        ps.executeUpdate();
-        
-        conn.close();
-        ps.close();        
-    }
-    
-    public int getProjectJustCreated(String projectName) throws ClassNotFoundException, SQLException {
+    public static project getProjectJustCreated(String projectName) throws ClassNotFoundException, SQLException {
         int id = 0;
+        double fee = 0;
         Connection conn = db.ConnectSQLServer();
-        ps = conn.prepareStatement("SELECT * FROM projects WHERE name = ? AND deleted_at is NULL");
+        PreparedStatement ps;
+        ResultSet rs;
+        ps = conn.prepareStatement("SELECT id,fee FROM projects WHERE name = ? AND deleted_at is NULL");
         ps.setString(1, projectName);
         rs = ps.executeQuery();
         while(rs.next()) {
             id = rs.getInt("id");
+            fee = rs.getDouble("fee");
         }
         conn.close();
         ps.close();        
         rs.close();
-        return id;
+        
+        project project = new project();
+        project.setId(id);
+        project.setFee(fee);
+        return project;
     }
     
     public void assignProject(int accountId, int projectId) throws ClassNotFoundException, SQLException {
@@ -82,14 +80,14 @@ public class project_controller {
     
     public void Edit(project project) throws SQLException, ClassNotFoundException {
         Connection conn = db.ConnectSQLServer();
-        ps = conn.prepareStatement("UPDATE projects SET name=?,code=?,start_date=?,end_date=?,fee=?,hours=? WHERE id = ? AND deleted_at is NULL");
+        ps = conn.prepareStatement("UPDATE projects SET name=?,code=?,start_date=?,end_date=?,hours=?,updated_at=? WHERE id = ? AND deleted_at is NULL");
         ps.setString(1, project.getName());
         ps.setString(2, project.getCode());
         ps.setDate(3, project.getStart_date());
         ps.setDate(4, project.getEnd_date());
-        ps.setDouble(5, project.getFee());
-        ps.setDouble(6, project.getHours());
+        ps.setDouble(5, project.getHours());
         ps.setInt(7, project.getId());
+        ps.setDate(6, java.sql.Date.valueOf(java.time.LocalDate.now().toString()));
         ps.executeUpdate();    
         
         conn.close();
@@ -160,5 +158,16 @@ public class project_controller {
         ps.close();
         
         return data;
+    }
+    
+    public static void updateFee(String projectName, double amount) throws SQLException, ClassNotFoundException {
+        Connection conn = db.ConnectSQLServer();
+        PreparedStatement ps;
+        ps = conn.prepareStatement("UPDATE projects SET fee=? WHERE name = ? AND deleted_at IS NULL");
+        ps.setDouble(1, amount+getProjectJustCreated(projectName).getFee());
+        ps.setString(2, projectName);
+        ps.executeUpdate();
+        conn.close();
+        ps.close();        
     }
 }

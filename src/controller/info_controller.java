@@ -45,12 +45,13 @@ public class info_controller {
     
     public info edit(info userInfo) throws ClassNotFoundException, SQLException {
         Connection conn = db.ConnectSQLServer();
-        ps = conn.prepareStatement("UPDATE user_infos SET full_name = ?, gender = ?, age = ?, address = ? WHERE id = ? AND deleted_at is NULL");
+        ps = conn.prepareStatement("UPDATE user_infos SET full_name = ?, gender = ?, age = ?, address = ?,updated_at=? WHERE id = ? AND deleted_at is NULL");
         ps.setString(1, userInfo.getFull_name());
-        ps.setInt(1, userInfo.getGender());
-        ps.setInt(1, userInfo.getAge());
-        ps.setString(1, userInfo.getAddress());
-        ps.setInt(1, userInfo.getId());
+        ps.setInt(2, userInfo.getGender());
+        ps.setInt(3, userInfo.getAge());
+        ps.setString(4, userInfo.getAddress());
+        ps.setInt(6, userInfo.getId());
+        ps.setDate(5, java.sql.Date.valueOf(java.time.LocalDate.now().toString()));
         ps.executeUpdate(); 
         conn.close();
         ps.close();

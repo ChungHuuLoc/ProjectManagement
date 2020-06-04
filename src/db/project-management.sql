@@ -56,7 +56,7 @@ create table tasks (
     updated_at      datetime not null default getdate(),
     deleted_at      datetime,    
     account_id      int not null foreign key references accounts(id),
-    name            text not null,
+    name            varchar(100) unique not null,
     billable        int,
     rate            decimal(19,2),
     primary key(id)

@@ -59,4 +59,18 @@ public class role_controller {
         rs.close();
         return role;
     }
+    
+    public static void updateRole(int projectId, int accountId, String name) throws ClassNotFoundException, SQLException {
+        Connection conn = db.ConnectSQLServer();
+        PreparedStatement ps;
+        ps = conn.prepareStatement("UPDATE roles SET name = ?,updated_at=? WHERE project_id = ? AND accountId = ? ");
+        ps.setString(1, name);
+        ps.setInt(3, projectId);
+        ps.setInt(4, accountId);
+        ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now().toString()));
+        ps.executeUpdate();
+        
+        ps.close();
+        conn.close();
+    }
 }
