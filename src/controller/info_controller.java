@@ -11,6 +11,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.info;
 
 /**
@@ -23,14 +26,14 @@ public class info_controller {
     PreparedStatement ps;
     ResultSet rs;
     
-    public info show(String email) throws ClassNotFoundException, SQLException {
+    public info show(String  email) throws ClassNotFoundException, SQLException {
         Connection conn = db.ConnectSQLServer();
         info userInfo = new info();
-        ps = conn.prepareStatement("SELECT * FROM user_infos WHERE email = ? AND deleted_at is NULL");
+        ps = conn.prepareStatement("SELECT * FROM user_infos WHERE email=? AND deleted_at is NULL");
         ps.setString(1, email);
         rs = ps.executeQuery();
         while(rs.next()) {
-            userInfo.setId(rs.getInt("id"));
+            userInfo.setId(rs.getInt("account_id"));
             userInfo.setEmail(rs.getString("email"));
             userInfo.setFull_name(rs.getString("full_name"));
             userInfo.setGender(rs.getInt("gender"));
@@ -45,16 +48,13 @@ public class info_controller {
     
     public info edit(info userInfo) throws ClassNotFoundException, SQLException {
         Connection conn = db.ConnectSQLServer();
-        ps = conn.prepareStatement("UPDATE user_infos SET full_name = ?, gender = ?, age = ?, address = ?,updated_at=? WHERE id = ? AND deleted_at is NULL");
+        ps = conn.prepareStatement("UPDATE user_infos SET full_name = ?, gender = ?, age = ?, address = ? WHERE email = ? AND deleted_at is NULL");
         ps.setString(1, userInfo.getFull_name());
-        ps.setInt(2, userInfo.getGender());
-        ps.setInt(3, userInfo.getAge());
-        ps.setString(4, userInfo.getAddress());
-        ps.setInt(6, userInfo.getId());
-        ps.setDate(5, java.sql.Date.valueOf(java.time.LocalDate.now().toString()));
+        ps.setInt(1, userInfo.getGender());
+        ps.setInt(1, userInfo.getAge());
+        ps.setString(1, userInfo.getAddress());
+        ps.setInt(1, userInfo.getId());
         ps.executeUpdate(); 
-        conn.close();
-        ps.close();
         
         return show(userInfo.getEmail());
     }
