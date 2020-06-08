@@ -25,6 +25,7 @@ import model.*;
  *
  * @author ADMIN
  */
+
 public class Login extends javax.swing.JFrame {
 
     /**
@@ -204,24 +205,19 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton1_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1_LoginActionPerformed
         // TODO add your handling code here:
-          PreparedStatement st;
-         ResultSet rs;
+//          PreparedStatement st;
+//         ResultSet rs;
          //get Username and password
          String mail = jTextField_Mail.getText();
          String password = String.valueOf(jPasswordField.getPassword());
-         model.account account = new model.account();
-           account.setEmail(mail);
-           account.setPassword(password);
-            account_controller signin = new account_controller();
+         
+           account_controller signin = new account_controller();
         try {
             signin.signin(mail,password);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        InforForm form = new InforForm();
-        form.setVisible(true);
-        form.setLocationRelativeTo(null);
-        this.dispose();
+        
     }//GEN-LAST:event_jButton1_LoginActionPerformed
 
     private void jTextField_MailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_MailActionPerformed
